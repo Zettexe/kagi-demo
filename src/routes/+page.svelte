@@ -26,7 +26,7 @@
   ];
 </script>
 
-<div class="widget-container">
+<div class="grid grid-cols-3 gap-3 p-3">
   <RecipeWidget
     id="1"
     title="Meat Lasagna Recipe"
@@ -55,12 +55,3 @@
     between the system input and the system output.
   </TextWidget>
 </div>
-
-<style>
-  .widget-container {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem;
-    padding: 1rem;
-  }
-</style>
