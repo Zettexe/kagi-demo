@@ -1,14 +1,19 @@
 <script>
-  let benchmark_results = $state([[], [], []]);
+  let benchmarks = [
+    "benchmark.v1.worker.js",
+    "benchmark.v2.worker.js",
+    "benchmark.v3.worker.js",
+  ];
+  let benchmark_results = $state([[], [], [], []]);
   let parameters = $state(["", "", ""]);
 
   let benchmark = (name, number_of_judges, others) => {
     parameters[0] = name;
     parameters[1] = number_of_judges;
     parameters[2] = others;
-    benchmark_results[0] = [];
-    benchmark_results[1] = [];
-    benchmark_results[2] = [];
+    for (let i = 0; i < benchmarks.length; i += 1) {
+      benchmark_results[i] = [];
+    }
 
     const onerror = (error) => {
       console.error("Worker error:", error);
@@ -20,29 +25,15 @@
       iterations: [100000, 1000000, 10000000],
     };
 
-    const workerv1 = new Worker("benchmark.v1.worker.js");
-    workerv1.onmessage = (e) => {
-      benchmark_results[0] = e.data;
-      workerv1.terminate();
-    };
-    workerv1.onerror = onerror;
-    workerv1.postMessage(postMessage);
-
-    const workerv2 = new Worker("benchmark.v2.worker.js");
-    workerv2.onmessage = (e) => {
-      benchmark_results[1] = e.data;
-      workerv2.terminate();
-    };
-    workerv2.onerror = onerror;
-    workerv2.postMessage(postMessage);
-
-    const workerv3 = new Worker("benchmark.v3.worker.js");
-    workerv3.onmessage = (e) => {
-      benchmark_results[2] = e.data;
-      workerv3.terminate();
-    };
-    workerv3.onerror = onerror;
-    workerv3.postMessage(postMessage);
+    benchmarks.forEach((benchmark_file, index) => {
+      const worker = new Worker(benchmark_file);
+      worker.onmessage = (e) => {
+        benchmark_results[index] = e.data;
+        worker.terminate();
+      };
+      worker.onerror = onerror;
+      worker.postMessage(postMessage);
+    });
   };
 </script>
 
