@@ -4,7 +4,7 @@
     "benchmark.v2.worker.js",
     "benchmark.v3.worker.js",
   ];
-  let benchmark_results = $state([[], [], [], []]);
+  let benchmark_results = $state([[], [], []]);
   let parameters = $state(["", "", ""]);
 
   let benchmark = (name, number_of_judges, others) => {
